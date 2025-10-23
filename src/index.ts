@@ -9,6 +9,6 @@ const app = new Elysia()
   .use(cors())
   .use(apiV1)
   .get('/', () => 'Hello Termitary')
-  .listen(3000);
+  .listen(Number(Bun.env.PORT) || 3000);
 
 console.log(`🚀 Termitary API is running at ${app.server?.hostname}:${app.server?.port}`);
