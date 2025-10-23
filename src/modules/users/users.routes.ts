@@ -21,5 +21,5 @@ const userRoutes = new Elysia({ name: 'users', prefix: 'users' })
   .delete('/:id', ({ params }) => {
     return { message: `Delete user with ID: ${params.id}` };
   });
-
+export type UserRoutes = typeof userRoutes;
 export default userRoutes;
