@@ -20,6 +20,7 @@ const app = new Elysia()
     })
   )
   .use(apiV1)
+  .get('/', () => 'Hello Termitary')
   .listen(3000);
 
 console.log(
