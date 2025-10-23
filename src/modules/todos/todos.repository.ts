@@ -46,3 +46,14 @@ export async function findOneById(id: string) {
     }
     return mapObject(rows[0]);
 }
+
+export async function findOverdueTasks(): Promise<TodoDto[]> {
+    const now = new Date().toISOString();
+    const rows = await sql`
+        SELECT * FROM todos
+        WHERE dueDate IS NOT NULL
+        AND dueDate < ${now}
+        ORDER BY priority DESC, dueDate ASC
+    `;
+    return rows.map((row: TodoRow) => mapObject(row));
+}
