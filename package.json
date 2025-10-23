@@ -4,6 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
+    "worker": "bun run --watch src/worker.ts",
+    "start": "bun run src/index.ts",
+    "start:worker": "bun run src/worker.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",

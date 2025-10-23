@@ -19,6 +19,7 @@ export default [
         console: 'readonly',
         Bun: 'readonly',
         process: 'readonly',
+        crypto: 'readonly',
       },
     },
     plugins: {
