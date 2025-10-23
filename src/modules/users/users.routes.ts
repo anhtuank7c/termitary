@@ -1,10 +1,14 @@
-import Elysia from "elysia";
+import Elysia from 'elysia';
 import * as paginationValidation from '../../shared/validations/pagination.validation';
 
 const userRoutes = new Elysia({ name: 'users', prefix: 'users' })
-  .get('/', () => {
-    return { message: 'Get all users' };
-  }, { query: paginationValidation.query })
+  .get(
+    '/',
+    () => {
+      return { message: 'Get all users' };
+    },
+    { query: paginationValidation.query },
+  )
   .get('/:id', ({ params }) => {
     return { message: `Get user with ID: ${params.id}` };
   })

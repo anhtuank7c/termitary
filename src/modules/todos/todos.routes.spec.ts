@@ -5,31 +5,31 @@ import { todoRoutes, type TodoRoutes } from './todos.routes';
 const app = treaty<TodoRoutes>(todoRoutes);
 
 describe('Todos', () => {
-    describe('GET', () => {
-        describe('findAll', () => {
-            test('able to get list of todo tasks', async () => {
-                const { data, error } = await app.todos.get();
-                expect(data).toBeArray();
-            });
-            test('able to get list of todo tasks with limit, skip, sort', async () => {
-                const { data, error } = await app.todos.get({
-                    query: {
-                        limit: 10,
-                        skip: 0,
-                        sort: 'createdAt|desc,priority|asc'
-                    }
-                });
-                expect(data).toBeArray();
-            });
+  describe('GET', () => {
+    describe('findAll', () => {
+      test('able to get list of todo tasks', async () => {
+        const { data, error } = await app.todos.get();
+        expect(data).toBeArray();
+      });
+      test('able to get list of todo tasks with limit, skip, sort', async () => {
+        const { data, error } = await app.todos.get({
+          query: {
+            limit: 10,
+            skip: 0,
+            sort: 'createdAt|desc,priority|asc',
+          },
         });
-
-        describe('findOne', () => {
-            test('able to get todo task by id', async () => {
-                const { data, error, status } = await app.todos({ id: 'fake_' }).get()
-                expect(status).toBe(500);
-            });
-        });
-
-        // TODO: mock data, mock service/repository
+        expect(data).toBeArray();
+      });
     });
+
+    describe('findOne', () => {
+      test('able to get todo task by id', async () => {
+        const { data, error, status } = await app.todos({ id: 'fake_' }).get();
+        expect(status).toBe(500);
+      });
+    });
+
+    // TODO: mock data, mock service/repository
+  });
 });

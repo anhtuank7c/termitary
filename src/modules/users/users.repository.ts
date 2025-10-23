@@ -1,6 +1,6 @@
-import { sql } from "../../infrastructure/adapters/database.adapter";
-import { UserDto } from "./dto/user.dto";
-import { UserEntity } from "./entity/user.entity";
+import { sql } from '../../infrastructure/adapters/database.adapter';
+import { UserDto } from './dto/user.dto';
+import { UserEntity } from './entity/user.entity';
 
 function mapToUserDto(dbRecord: UserEntity): UserDto {
   return {
