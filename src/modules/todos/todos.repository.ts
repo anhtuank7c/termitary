@@ -1,26 +1,8 @@
 import { sql } from "../../infrastructure/adapters/database.adapter";
+import { TodoDto } from "./dto/todo.dto";
+import { TodoEntity } from "./entity/todo.entity";
 
-interface TodoRow {
-    id: string;
-    title: string;
-    priority: 'low' | 'medium' | 'high';
-    description?: string;
-    dueDate?: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
-interface TodoDto {
-    id: string;
-    title: string;
-    priority: 'low' | 'medium' | 'high';
-    description?: string;
-    dueDate?: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
-function mapObject(row: TodoRow) {
+function mapObject(row: TodoEntity) {
     return {
         id: row.id,
         title: row.title,
@@ -35,7 +17,7 @@ function mapObject(row: TodoRow) {
 export async function findAll(params: { limit: number; skip: number, sort: Record<string, string>[] }): Promise<TodoDto[]> {
     const { limit, skip, sort = [] } = params;
     const rows = await sql`SELECT * FROM todos LIMIT ${limit} OFFSET ${skip}`;
-    const todoList = rows.map((row: TodoRow) => mapObject(row));
+    const todoList = rows.map((row: TodoEntity) => mapObject(row));
     return todoList;
 }
 
@@ -55,5 +37,5 @@ export async function findOverdueTasks(): Promise<TodoDto[]> {
         AND dueDate < ${now}
         ORDER BY priority DESC, dueDate ASC
     `;
-    return rows.map((row: TodoRow) => mapObject(row));
+    return rows.map((row: TodoEntity) => mapObject(row));
 }
