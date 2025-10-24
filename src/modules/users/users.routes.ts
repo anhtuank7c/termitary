@@ -1,6 +1,7 @@
 import Elysia, { t } from 'elysia';
 import * as paginationValidation from '../../shared/validations/pagination.validation';
 import { client } from '../../infrastructure/adapters/redis.adapter';
+import { createUser } from './users.repository';
 
 const userRoutes = new Elysia({ name: 'users', prefix: 'users' })
   .get(
@@ -19,12 +20,8 @@ const userRoutes = new Elysia({ name: 'users', prefix: 'users' })
     '/',
     async ({ body }) => {
       // In a real implementation, save to database using repository
-      const newUser = {
-        id: crypto.randomUUID(),
-        ...body,
-        createdAt: new Date().toISOString(),
-      };
-
+      const newUser = await createUser(body);
+      await client.publish('users.created', JSON.stringify(newUser));
       return { success: true, data: newUser };
     },
     {
