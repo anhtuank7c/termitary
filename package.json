@@ -2,6 +2,9 @@
   "name": "termitary",
   "version": "1.0.50",
   "type": "module",
+  "engines": {
+    "bun": ">=1.1.31"
+  },
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "worker": "bun run --watch src/worker.ts",
