@@ -1,4 +1,4 @@
-export interface CommentEntity {
+export interface CommentDto {
   id: string;
   todoId: string;
   author: string;

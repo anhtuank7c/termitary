@@ -1,37 +1,35 @@
--- /D:/projects/personal/termitary/src/modules/todos/migrates/todos.migrate.sql
--- MySQL-compatible migration
--- Converted from PostgreSQL. MySQL does not support the "uuid-ossp" extension.
+-- MySQL-compatible migration for todos
 -- Using CHAR(36) to store UUID strings and UUID() as default (MySQL 8+).
--- Alternatively, for storage/space efficiency you can use BINARY(16) and store UUIDs packed using UNHEX(REPLACE(UUID(),'-',''))
--- and add triggers to set them; the CHAR(36) approach is simplest and most portable.
 
 CREATE TABLE IF NOT EXISTS todos (
   id CHAR(36) PRIMARY KEY NOT NULL DEFAULT (UUID()),
   title VARCHAR(255) NOT NULL,
   description TEXT,
-  is_completed TINYINT(1) NOT NULL DEFAULT 0,
+  priority ENUM('low', 'medium', 'high') NOT NULL DEFAULT 'medium',
   due_date DATETIME(6),
-  priority INT DEFAULT 0,
+  completed_at DATETIME(6),
+  creator_id CHAR(36) NOT NULL,
+  assignee_id CHAR(36),
   created_at DATETIME(6) NOT NULL DEFAULT (CURRENT_TIMESTAMP(6)),
   updated_at DATETIME(6) NOT NULL DEFAULT (CURRENT_TIMESTAMP(6)) ON UPDATE CURRENT_TIMESTAMP(6)
 );
 
--- Index to efficiently find incomplete tasks ordered by due date.
--- This composite index supports queries like:
---   SELECT * FROM todos WHERE is_completed = 0 ORDER BY due_date ASC LIMIT 10;
-CREATE INDEX IF NOT EXISTS idx_todos_is_completed_due_date ON todos (is_completed, due_date);
+-- Index to efficiently find tasks by priority
+CREATE INDEX idx_todos_priority ON todos (priority);
 
--- Index to efficiently find incomplete tasks ordered by due date and priority.
--- This composite index supports queries like:
---   SELECT * FROM todos WHERE is_completed = 0 ORDER BY due_date ASC, priority desc LIMIT 10;
-CREATE INDEX IF NOT EXISTS idx_todos_is_completed_due_date_priority ON todos (is_completed, due_date, priority);
+-- Index to find todos by creator
+CREATE INDEX idx_todos_creator_id ON todos (creator_id);
+
+-- Composite index for assignee queries with sorting by created_at
+-- Useful for: WHERE assignee_id = 'xxx' ORDER BY created_at DESC
+CREATE INDEX idx_todos_assignee_created ON todos (assignee_id, created_at);
 
 -- Comments table: attach comments to each todo item.
 -- Uses CHAR(36) for UUID strings to match the `todos.id` column.
 CREATE TABLE IF NOT EXISTS comments (
   id CHAR(36) PRIMARY KEY NOT NULL DEFAULT (UUID()),
   todo_id CHAR(36) NOT NULL,
-  author VARCHAR(255),
+  author VARCHAR(255) NOT NULL,
   body TEXT NOT NULL,
   created_at DATETIME(6) NOT NULL DEFAULT (CURRENT_TIMESTAMP(6)),
   updated_at DATETIME(6) NOT NULL DEFAULT (CURRENT_TIMESTAMP(6)) ON UPDATE CURRENT_TIMESTAMP(6),
@@ -39,4 +37,4 @@ CREATE TABLE IF NOT EXISTS comments (
 );
 
 -- Index to fetch comments for a given todo sorted by newest first
-CREATE INDEX IF NOT EXISTS idx_comments_todo_created_at ON comments (todo_id, created_at DESC);
+CREATE INDEX idx_comments_todo_created_at ON comments (todo_id, created_at DESC);

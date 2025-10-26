@@ -4,9 +4,10 @@ import { t, type Static } from 'elysia';
 export const createTodoSchema = t.Object({
   title: t.String({ minLength: 1 }),
   description: t.Optional(t.String()),
-  assignee: t.Optional(t.String()),
   priority: t.Optional(t.Union([t.Literal('low'), t.Literal('medium'), t.Literal('high')])),
   dueDate: t.Optional(t.String({ format: 'date-time' })),
+  creatorId: t.String({ minLength: 1 }),
+  assigneeId: t.Optional(t.String()),
 });
 
 // Infer TypeScript type from the schema

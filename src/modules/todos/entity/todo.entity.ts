@@ -6,4 +6,7 @@ export interface TodoEntity {
   dueDate?: string;
   createdAt: string;
   updatedAt: string;
+  completedAt?: string;
+  creatorId: string;
+  assigneeId?: string;
 }
