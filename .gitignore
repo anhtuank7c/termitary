@@ -35,7 +35,9 @@ yarn-error.log*
 
 # ai
 .claude
+opencode.json
 
+# custom
 **/*.trace
 **/*.zip
 **/*.tar.gz
