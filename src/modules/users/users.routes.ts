@@ -11,7 +11,7 @@ const userRoutes = new Elysia({ name: 'users', prefix: 'users' })
       await client.publish('users.created', JSON.stringify({ test: 'data' }));
       return { message: 'Get all users' };
     },
-    { query: paginationValidation.query },
+    { query: paginationValidation.querySchema },
   )
   .get('/:id', ({ params }) => {
     return { message: `Get user with ID: ${params.id}` };

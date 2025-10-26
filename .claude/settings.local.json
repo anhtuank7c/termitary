@@ -9,7 +9,9 @@
       "Bash(bunx husky:*)",
       "Bash(bun run format:*)",
       "Bash(bun run lint:*)",
-      "Bash(bun run lint:fix:*)"
+      "Bash(bun run lint:fix:*)",
+      "Bash(mkdir:*)",
+      "Bash(bun test:*)"
     ],
     "deny": [],
     "ask": []
