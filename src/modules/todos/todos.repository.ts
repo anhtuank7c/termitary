@@ -1,4 +1,5 @@
 import { sql } from '../../infrastructure/adapters/database.adapter';
+import { SortDirection } from '../../shared/validations/pagination.validation';
 import { TodoDto } from './dto/todo.dto';
 import { TodoEntity } from './entity/todo.entity';
 
@@ -8,20 +9,21 @@ function mapObject(row: TodoEntity) {
     title: row.title,
     priority: row.priority,
     description: row.description ?? '',
-    dueDate: row.dueDate,
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
+    dueDate: row.due_date,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   } as TodoDto;
 }
 
 export async function findAll(params: {
   limit: number;
   skip: number;
-  sort: Record<string, string>[];
+  sort: Record<string, SortDirection>[];
 }): Promise<TodoDto[]> {
   const { limit, skip, sort = [] } = params;
   const rows = await sql`SELECT * FROM todos LIMIT ${limit} OFFSET ${skip}`;
   const todoList = rows.map((row: TodoEntity) => mapObject(row));
+  console.log('Retrieved Todos:', todoList);
   return todoList;
 }
 

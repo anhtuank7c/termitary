@@ -9,6 +9,7 @@ const todoRoutes = new Elysia({ name: 'todos', prefix: 'todos' })
   .get(
     '/',
     async ({ query: { limit, skip, sort } }) => {
+      console.log('Query Params - Limit:', limit, 'Skip:', skip, 'Sort:', sort);
       const todos = await todosService.findAll({ limit, skip, sort });
       return todos;
     },

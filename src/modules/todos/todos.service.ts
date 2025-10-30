@@ -36,16 +36,9 @@ function validateDueDate(dueDate?: string): void {
 export async function findAll(params: PaginationQueryDto = {}): Promise<TodoDto[]> {
   const { limit = 10, skip = 0, sort } = params;
 
-  // Validate pagination parameters
-  if (limit < 1 || limit > 100) {
-    throw new Error('Limit must be between 1 and 100');
-  }
-
-  if (skip < 0) {
-    throw new Error('Skip must be a non-negative number');
-  }
-
   const sortFields = parseSortString(sort);
+  console.log('Sort Fields:', sortFields);
+
   const todos = await todosRepository.findAll({ limit, skip, sort: sortFields });
 
   return todos;

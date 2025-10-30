@@ -1,7 +1,9 @@
+import { Priority } from '../entity/todo.entity';
+
 export interface TodoDto {
   id: string;
   title: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: Priority;
   description?: string;
   dueDate?: string;
   createdAt: string;
