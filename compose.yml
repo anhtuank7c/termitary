@@ -45,7 +45,7 @@ services:
     container_name: termitary_pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@termitary.local
+      PGADMIN_DEFAULT_EMAIL: admin@termitary.com
       PGADMIN_DEFAULT_PASSWORD: adminpassword
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
