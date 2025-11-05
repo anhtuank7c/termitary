@@ -1,7 +1,7 @@
-import { sql } from '../../infrastructure/adapters/database.adapter';
-import { SortDirection } from '../../shared/validations/pagination.validation';
+import { sql } from '../../../../infrastructure/adapters/database.adapter';
+import { SortDirection } from '../../../../shared/validations/pagination.validation';
 import { TodoDto } from './dto/todo.dto';
-import { TodoEntity } from './entity/todo.entity';
+import { TodoEntity } from './entities/todo.entity';
 
 function mapObject(row: TodoEntity) {
   return {

@@ -1,4 +1,4 @@
-import { t, type Static } from 'elysia';
+import { t } from 'elysia';
 
 // Elysia validation schema - single source of truth
 export const createCommentSchema = t.Object({
@@ -8,4 +8,4 @@ export const createCommentSchema = t.Object({
 });
 
 // Infer TypeScript type from the schema
-export type CreateCommentDto = Static<typeof createCommentSchema>;
+export type CreateCommentDto = typeof createCommentSchema.static;

@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, mock } from 'bun:test';
 import { findAll } from './todos.repository';
-import type { TodoEntity } from './entity/todo.entity';
+import type { TodoEntity } from './entities/todo.entity';
 
 // Mock the database adapter
 const mockSql = mock();
@@ -21,18 +21,20 @@ describe('TodosRepository', () => {
           title: 'Test Todo 1',
           priority: 'high',
           description: 'Test description 1',
-          dueDate: '2025-12-31T23:59:59.000Z',
-          createdAt: '2025-01-01T00:00:00.000Z',
-          updatedAt: '2025-01-01T00:00:00.000Z',
+          due_date: '2025-12-31T23:59:59.000Z',
+          created_at: '2025-01-01T00:00:00.000Z',
+          creator_id: 'user-1',
+          updated_at: '2025-01-01T00:00:00.000Z',
         },
         {
           id: '2',
           title: 'Test Todo 2',
           priority: 'medium',
           description: 'Test description 2',
-          dueDate: '2025-12-30T23:59:59.000Z',
-          createdAt: '2025-01-02T00:00:00.000Z',
-          updatedAt: '2025-01-02T00:00:00.000Z',
+          due_date: '2025-12-30T23:59:59.000Z',
+          created_at: '2025-01-02T00:00:00.000Z',
+          creator_id: 'user-2',
+          updated_at: '2025-01-02T00:00:00.000Z',
         },
       ];
 
@@ -49,6 +51,7 @@ describe('TodosRepository', () => {
         description: 'Test description 1',
         dueDate: '2025-12-31T23:59:59.000Z',
         createdAt: '2025-01-01T00:00:00.000Z',
+        creatorId: 'user-1',
         updatedAt: '2025-01-01T00:00:00.000Z',
       });
     });
@@ -59,9 +62,10 @@ describe('TodosRepository', () => {
           id: '1',
           title: 'Test Todo',
           priority: 'low',
-          dueDate: '2025-12-31T23:59:59.000Z',
-          createdAt: '2025-01-01T00:00:00.000Z',
-          updatedAt: '2025-01-01T00:00:00.000Z',
+          due_date: '2025-12-31T23:59:59.000Z',
+          created_at: '2025-01-01T00:00:00.000Z',
+          creator_id: 'user-1',
+          updated_at: '2025-01-01T00:00:00.000Z',
         },
       ];
 
@@ -100,9 +104,10 @@ describe('TodosRepository', () => {
           title: 'Single Todo',
           priority: 'high',
           description: 'Description',
-          dueDate: '2025-12-31T23:59:59.000Z',
-          createdAt: '2025-01-01T00:00:00.000Z',
-          updatedAt: '2025-01-01T00:00:00.000Z',
+          due_date: '2025-12-31T23:59:59.000Z',
+          created_at: '2025-01-01T00:00:00.000Z',
+          creator_id: 'user-1',
+          updated_at: '2025-01-01T00:00:00.000Z',
         },
       ];
 
@@ -129,24 +134,27 @@ describe('TodosRepository', () => {
           title: 'High Priority',
           priority: 'high',
           description: 'High',
-          createdAt: '2025-01-01T00:00:00.000Z',
-          updatedAt: '2025-01-01T00:00:00.000Z',
+          created_at: '2025-01-01T00:00:00.000Z',
+          creator_id: 'user-1',
+          updated_at: '2025-01-01T00:00:00.000Z',
         },
         {
           id: '2',
           title: 'Medium Priority',
           priority: 'medium',
           description: 'Medium',
-          createdAt: '2025-01-02T00:00:00.000Z',
-          updatedAt: '2025-01-02T00:00:00.000Z',
+          created_at: '2025-01-02T00:00:00.000Z',
+          creator_id: 'user-2',
+          updated_at: '2025-01-02T00:00:00.000Z',
         },
         {
           id: '3',
           title: 'Low Priority',
           priority: 'low',
           description: 'Low',
-          createdAt: '2025-01-03T00:00:00.000Z',
-          updatedAt: '2025-01-03T00:00:00.000Z',
+          created_at: '2025-01-03T00:00:00.000Z',
+          creator_id: 'user-1',
+          updated_at: '2025-01-03T00:00:00.000Z',
         },
       ];
 
@@ -159,15 +167,16 @@ describe('TodosRepository', () => {
       expect(result[2].priority).toBe('low');
     });
 
-    test('should handle todos without dueDate', async () => {
+    test('should handle todos without due_date', async () => {
       const mockRows: TodoEntity[] = [
         {
           id: '1',
           title: 'No Due Date',
           priority: 'medium',
           description: 'Test',
-          createdAt: '2025-01-01T00:00:00.000Z',
-          updatedAt: '2025-01-01T00:00:00.000Z',
+          created_at: '2025-01-01T00:00:00.000Z',
+          creator_id: 'user-1',
+          updated_at: '2025-01-01T00:00:00.000Z',
         },
       ];
 
@@ -184,7 +193,7 @@ describe('TodosRepository', () => {
       await findAll({
         limit: 10,
         skip: 0,
-        sort: [{ field: 'createdAt', order: 'desc' }],
+        sort: [{ field: 'created_at', order: 'desc' }],
       });
 
       expect(mockSql).toHaveBeenCalledTimes(1);

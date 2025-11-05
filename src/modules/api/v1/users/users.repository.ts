@@ -1,7 +1,7 @@
-import { sql } from '../../infrastructure/adapters/database.adapter';
-import { client } from '../../infrastructure/adapters/redis.adapter';
+import { sql } from '../../../../infrastructure/adapters/database.adapter';
+import { client } from '../../../../infrastructure/adapters/redis.adapter';
 import { UserDto } from './dto/user.dto';
-import { UserEntity } from './entity/user.entity';
+import { UserEntity } from './entities/user.entity';
 
 function mapToUserDto(dbRecord: UserEntity): UserDto {
   return {

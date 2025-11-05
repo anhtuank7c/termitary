@@ -1,7 +1,7 @@
 // Import event listeners
-import './modules/todos/todos.event';
-import './modules/users/users.event';
+import './modules/api/v1/todos/todos.event';
+import './modules/api/v1/users/users.event';
 
 // Import cron scheduler
-import './modules/todos/todos.cronjob';
-import './modules/users/users.cronjob';
+import './modules/api/v1/todos/todos.cronjob';
+import './modules/api/v1/users/users.cronjob';

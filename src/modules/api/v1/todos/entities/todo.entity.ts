@@ -1,4 +1,9 @@
-export type Priority = 'low' | 'medium' | 'high';
+import { t } from 'elysia';
+
+export const prioritySchema = t.Union([t.Literal('low'), t.Literal('medium'), t.Literal('high')]);
+
+export type Priority = typeof prioritySchema.static;
+
 export interface TodoEntity {
   id: string;
   title: string;

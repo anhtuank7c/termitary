@@ -1,13 +1,12 @@
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
-import { todoRoutes } from './modules/todos/todos.routes';
-import userRoutes from './modules/users/users.routes';
-
-const apiV1 = new Elysia({ name: 'v1', prefix: 'api/v1' }).use(todoRoutes).use(userRoutes);
+import { apiRoutes } from './modules/api/api.routes';
+import { adminRoutes } from './modules/admin/admin.routes';
 
 const app = new Elysia()
   .use(cors())
-  .use(apiV1)
+  .use(adminRoutes)
+  .use(apiRoutes)
   .get('/', () => 'Hello Termitary')
   .listen(Number(Bun.env.PORT) || 3000);
 

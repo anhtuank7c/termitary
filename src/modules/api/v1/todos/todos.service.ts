@@ -5,12 +5,13 @@ import type { UpdateTodoDto } from './dto/update-todo.dto';
 import {
   PaginationQueryDto,
   parseSortString,
-} from '../../shared/validations/pagination.validation';
+} from '../../../../shared/validations/pagination.validation';
+import { Priority } from './entities/todo.entity';
 
 /**
  * Validate todo priority
  */
-function validatePriority(priority?: string): 'low' | 'medium' | 'high' {
+function validatePriority(priority?: string): Priority {
   const validPriorities = ['low', 'medium', 'high'];
   if (priority && !validPriorities.includes(priority)) {
     throw new Error(`Invalid priority: ${priority}. Must be one of: ${validPriorities.join(', ')}`);
@@ -77,7 +78,7 @@ export async function create(input: CreateTodoDto): Promise<TodoDto> {
     title: input.title.trim(),
     description: input.description?.trim() || '',
     priority,
-    dueDate: input.dueDate,
+    dueDate: input.dueDate || null,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };

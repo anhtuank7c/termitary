@@ -1,6 +1,6 @@
 import Elysia, { t } from 'elysia';
-import * as paginationValidation from '../../shared/validations/pagination.validation';
-import { client } from '../../infrastructure/adapters/redis.adapter';
+import * as paginationValidation from '../../../../shared/validations/pagination.validation';
+import { client } from '../../../../infrastructure/adapters/redis.adapter';
 import { createUser } from './users.repository';
 
 const userRoutes = new Elysia({ name: 'users', prefix: 'users' })

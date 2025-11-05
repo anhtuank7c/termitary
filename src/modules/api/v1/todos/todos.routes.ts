@@ -1,8 +1,9 @@
 import Elysia, { t } from 'elysia';
 import * as todosService from './todos.service';
-import * as paginationValidation from '../../shared/validations/pagination.validation';
+import * as paginationValidation from '../../../../shared/validations/pagination.validation';
 import { createTodoSchema } from './dto/create-todo.dto';
 import { updateTodoSchema } from './dto/update-todo.dto';
+import { todoDtoSchema } from './dto/todo.dto';
 
 const todoRoutes = new Elysia({ name: 'todos', prefix: 'todos' })
   // get list of todos
@@ -28,6 +29,7 @@ const todoRoutes = new Elysia({ name: 'todos', prefix: 'todos' })
       params: t.Object({
         id: t.String(),
       }),
+      response: todoDtoSchema,
     },
   )
   // create a new todo
@@ -39,6 +41,10 @@ const todoRoutes = new Elysia({ name: 'todos', prefix: 'todos' })
     },
     {
       body: createTodoSchema,
+      response: t.Object({
+        success: t.Boolean(),
+        data: todoDtoSchema,
+      }),
     },
   )
   // update a todo
@@ -53,6 +59,10 @@ const todoRoutes = new Elysia({ name: 'todos', prefix: 'todos' })
         id: t.String(),
       }),
       body: updateTodoSchema,
+      response: t.Object({
+        success: t.Boolean(),
+        data: todoDtoSchema,
+      }),
     },
   )
   // delete a todo

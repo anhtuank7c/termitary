@@ -1,4 +1,4 @@
-import { client } from '../../infrastructure/adapters/redis.adapter';
+import { client } from '../../../../infrastructure/adapters/redis.adapter';
 
 // Subscribe to todos.created event
 await client.subscribe('todos.overdue.check', async (payload: unknown) => {
