@@ -1,13 +1,17 @@
+import { eq } from 'drizzle-orm';
+import { db } from '../../infrastructure/adapters/database.adapter';
+import { Session, sessionTable, SessionWithToken } from './auth.schema';
 import { generateSecureRandomString } from './auth.util';
 
 const sessionExpiresInSeconds = 60 * 60 * 24; // 1 day
+const HASH_ALGORITHM = 'argon2id';
 
 export async function createSession(userId: string): Promise<SessionWithToken> {
   const now = new Date();
 
   const id = generateSecureRandomString();
   const secret = generateSecureRandomString();
-  const secretHash = await Bun.password.hash(secret, { algorithm: 'argon2id' });
+  const secretHash = await Bun.password.hash(secret, { algorithm: HASH_ALGORITHM });
 
   const token = id + '.' + secret;
 
@@ -19,8 +23,12 @@ export async function createSession(userId: string): Promise<SessionWithToken> {
     token,
   };
 
-  await sql`INSERT INTO session (id, user_id, secret_hash, created_at) VALUES (${session.id}, ${session.userId}, ${session.secretHash}, ${Math.floor(session.createdAt.getTime() / 1000)})`;
-
+  await db.insert(sessionTable).values({
+    id: session.id,
+    user_id: session.userId,
+    secret_hash: session.secretHash,
+    // created_at: Math.floor(session.createdAt.getTime() / 1000),
+  });
   return session;
 }
 
@@ -37,7 +45,7 @@ export async function validateSessionToken(token: string): Promise<Session | nul
     return null;
   }
 
-  const valid = await Bun.password.verify(sessionSecret, session.secretHash);
+  const valid = await Bun.password.verify(sessionSecret, session.secretHash, HASH_ALGORITHM);
   if (!valid) {
     return null;
   }
@@ -48,18 +56,10 @@ export async function validateSessionToken(token: string): Promise<Session | nul
 export async function getSession(sessionId: string): Promise<Session | null> {
   const now = new Date();
 
-  const result =
-    await sql`SELECT id, user_id, secret_hash, created_at FROM session WHERE id = ${sessionId}`;
-  if (result.length !== 1) {
+  const session = await db.query.sessionTable.findFirst({ where: eq(sessionTable.id, sessionId) });
+  if (!session) {
     return null;
   }
-  const row = result[0];
-  const session: Session = {
-    id: row.id,
-    userId: row.user_id,
-    secretHash: row.secret_hash,
-    createdAt: new Date(row.created_at * 1000),
-  };
 
   // Check expiration
   if (now.getTime() - session.createdAt.getTime() >= sessionExpiresInSeconds * 1000) {
@@ -71,5 +71,5 @@ export async function getSession(sessionId: string): Promise<Session | null> {
 }
 
 export async function deleteSession(sessionId: string): Promise<void> {
-  await sql`DELETE FROM session WHERE id = ${sessionId}`;
+  await db.delete(sessionTable).where(eq(sessionTable.id, sessionId));
 }
