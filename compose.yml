@@ -40,21 +40,21 @@ services:
       retries: 5
 
   # pgAdmin
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: termitary_pgadmin
-    restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@termitary.com
-      PGADMIN_DEFAULT_PASSWORD: adminpassword
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    ports:
-      - '8080:80'
-    networks:
-      - termitary_network
-    depends_on:
-      postgres:
-        condition: service_healthy
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   container_name: termitary_pgadmin
+  #   restart: unless-stopped
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@termitary.com
+  #     PGADMIN_DEFAULT_PASSWORD: adminpassword
+  #     PGADMIN_CONFIG_SERVER_MODE: 'False'
+  #   ports:
+  #     - '8080:80'
+  #   networks:
+  #     - termitary_network
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
 
   # Application (optional - uncomment to run app in Docker)
   # app:

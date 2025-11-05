@@ -4,14 +4,15 @@ import { Session, sessionTable, SessionWithToken } from './auth.schema';
 import { generateSecureRandomString } from './auth.util';
 
 const sessionExpiresInSeconds = 60 * 60 * 24; // 1 day
-const HASH_ALGORITHM = 'argon2id';
 
 export async function createSession(userId: string): Promise<SessionWithToken> {
   const now = new Date();
 
   const id = generateSecureRandomString();
   const secret = generateSecureRandomString();
-  const secretHash = await Bun.password.hash(secret, { algorithm: HASH_ALGORITHM });
+  const secretHash = await Bun.password.hash(secret, {
+    algorithm: process.env.HASH_ALGORITHM! as Bun.Password.AlgorithmLabel,
+  });
 
   const token = id + '.' + secret;
 
@@ -45,7 +46,11 @@ export async function validateSessionToken(token: string): Promise<Session | nul
     return null;
   }
 
-  const valid = await Bun.password.verify(sessionSecret, session.secretHash, HASH_ALGORITHM);
+  const valid = await Bun.password.verify(
+    sessionSecret,
+    session.secretHash,
+    process.env.HASH_ALGORITHM! as Bun.Password.AlgorithmLabel,
+  );
   if (!valid) {
     return null;
   }
