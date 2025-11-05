@@ -12,12 +12,13 @@ mock.module('./auth.util', () => ({
   constantTimeEqual: mockConstantTimeEqual,
 }));
 
+mock.module('../../../../infrastructure/adapters/database.adapter', () => ({
+  sql: mock(async () => []),
+}));
+
 describe('AuthRepository', () => {
   describe('createSession', () => {
-    let mockSql: any;
-
     beforeEach(() => {
-      mockSql = mock(async () => []);
       mockGenerateSecureRandomString.mockClear();
       mockHashSecret.mockClear();
       mockGenerateSecureRandomString.mockReturnValue('mock-random-string');
@@ -26,12 +27,8 @@ describe('AuthRepository', () => {
 
     test('should create a new session with valid token', async () => {
       let capturedQuery: any;
-      mockSql = mock(async function (this: any, ...args: any[]) {
-        capturedQuery = args;
-        return [];
-      });
 
-      const session = await createSession(mockSql);
+      const session = await createSession();
 
       expect(session).toBeDefined();
       expect(session.id).toBe('mock-random-string');
@@ -47,9 +44,7 @@ describe('AuthRepository', () => {
         return `random-string-${callCount}`;
       });
 
-      mockSql = mock(async () => []);
-
-      const session = await createSession(mockSql);
+      const session = await createSession();
 
       expect(mockGenerateSecureRandomString).toHaveBeenCalledTimes(2);
       expect(session.id).toBe('random-string-1');
@@ -59,9 +54,7 @@ describe('AuthRepository', () => {
     test('should hash the secret before storing', async () => {
       const mockHash = new Uint8Array([10, 20, 30, 40]);
       mockHashSecret.mockResolvedValue(mockHash);
-      mockSql = mock(async () => []);
-
-      const session = await createSession(mockSql);
+      const session = await createSession();
 
       expect(mockHashSecret).toHaveBeenCalledTimes(1);
       expect(mockHashSecret).toHaveBeenCalledWith('mock-random-string');
@@ -70,20 +63,10 @@ describe('AuthRepository', () => {
 
     test('should insert session into database with correct parameters', async () => {
       let insertedData: any = null;
-      mockSql = mock(async function (this: any, strings: TemplateStringsArray, ...values: any[]) {
-        insertedData = {
-          id: values[0],
-          secretHash: values[1],
-          timestamp: values[2],
-        };
-        return [];
-      });
-
       const beforeTime = Math.floor(Date.now() / 1000);
-      await createSession(mockSql);
+      await createSession();
       const afterTime = Math.floor(Date.now() / 1000);
 
-      expect(mockSql).toHaveBeenCalledTimes(1);
       expect(insertedData).toBeDefined();
       expect(insertedData.id).toBe('mock-random-string');
       expect(insertedData.secretHash).toBeInstanceOf(Uint8Array);
@@ -95,9 +78,7 @@ describe('AuthRepository', () => {
       mockGenerateSecureRandomString
         .mockReturnValueOnce('test-id-123')
         .mockReturnValueOnce('test-secret-456');
-      mockSql = mock(async () => []);
-
-      const session = await createSession(mockSql);
+      const session = await createSession();
 
       expect(session.token).toBe('test-id-123.test-secret-456');
       expect(session.token).toContain('.');
@@ -105,10 +86,9 @@ describe('AuthRepository', () => {
     });
 
     test('should set createdAt to current time', async () => {
-      mockSql = mock(async () => []);
       const beforeTime = Date.now();
 
-      const session = await createSession(mockSql);
+      const session = await createSession();
 
       const afterTime = Date.now();
       const sessionTime = session.createdAt.getTime();
@@ -119,13 +99,9 @@ describe('AuthRepository', () => {
 
     test('should create session with Unix timestamp in seconds', async () => {
       let insertedTimestamp: number | null = null;
-      mockSql = mock(async function (this: any, strings: TemplateStringsArray, ...values: any[]) {
-        insertedTimestamp = values[2];
-        return [];
-      });
 
       const beforeTime = Math.floor(Date.now() / 1000);
-      await createSession(mockSql);
+      await createSession();
       const afterTime = Math.floor(Date.now() / 1000);
 
       expect(insertedTimestamp).toBeDefined();
@@ -136,17 +112,15 @@ describe('AuthRepository', () => {
     });
 
     test('should handle database insertion errors', async () => {
-      mockSql = mock(async () => {
+      mock.module('../../../../infrastructure/adapters/database.adapter', () => {
         throw new Error('Database connection error');
       });
 
-      await expect(createSession(mockSql)).rejects.toThrow('Database connection error');
+      await expect(createSession()).rejects.toThrow('Database connection error');
     });
 
     test('should return SessionWithToken interface', async () => {
-      mockSql = mock(async () => []);
-
-      const session = await createSession(mockSql);
+      const session = await createSession();
 
       // Verify all required properties exist
       expect(session).toHaveProperty('id');

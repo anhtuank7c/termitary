@@ -1,12 +1,14 @@
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
-import { apiRoutes } from './modules/api/api.routes';
-import { adminRoutes } from './modules/admin/admin.routes';
+import { fromTypes, openapi } from '@elysiajs/openapi';
+import { bearer } from '@elysiajs/bearer';
+import { authRoutes } from './modules/auth/auth.routes';
 
 const app = new Elysia()
+  .use(openapi({ references: fromTypes() }))
+  .use(bearer())
   .use(cors())
-  .use(adminRoutes)
-  .use(apiRoutes)
+  .use(authRoutes)
   .get('/', () => 'Hello Termitary')
   .listen(Number(Bun.env.PORT) || 3000);
 
