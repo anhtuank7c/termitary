@@ -17,3 +17,4 @@ export const sessionTable = t.pgTable(
 
 export type Session = typeof sessionTable.$inferSelect;
 export type SessionWithToken = Session & { token: string };
+export type SessionWithoutHash = Omit<Session, 'secretHash'>;

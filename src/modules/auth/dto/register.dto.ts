@@ -11,7 +11,7 @@ export const registerSchema = z
   })
   .refine((arg) => arg.password === arg.confirmPassword, {
     path: ['confirmPassword'],
-    error: 'Password does not match',
+    message: 'Password does not match',
   });
 
 export type RegisterDto = z.output<typeof registerSchema>;

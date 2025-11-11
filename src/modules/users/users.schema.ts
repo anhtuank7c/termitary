@@ -25,4 +25,5 @@ export const usersTable = t.pgTable(
 );
 
 export type User = typeof usersTable.$inferSelect;
+export type UserDTO = Omit<User, 'passwordHashed'>;
 export type NewUser = typeof usersTable.$inferInsert;

@@ -20,6 +20,7 @@
     "db:generate:prod": "drizzle-kit generate --config ./drizzle-prod.config.ts"
   },
   "dependencies": {
+    "@chneau/elysia-logger": "^1.0.10",
     "@elysiajs/bearer": "^1.4.1",
     "@elysiajs/cors": "^1.4.0",
     "@elysiajs/cron": "^1.4.1",

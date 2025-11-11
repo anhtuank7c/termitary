@@ -1,36 +1,40 @@
 import { createUser, getUserByEmail } from '../users/users.repository';
-import { NewUser } from '../users/users.schema';
+import { NewUser, UserDTO } from '../users/users.schema';
 import { createSession } from './auth.repository';
-import { SessionWithToken } from './auth.schema';
+import { SessionWithoutHash } from './auth.schema';
 import { generateSecureRandomString } from './auth.util';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { UnauthorizedError, ConflictError } from '../../common/errors/http-error';
 
-export async function login({ email, password }: LoginDto): Promise<SessionWithToken | null> {
+export async function login({ email, password }: LoginDto): Promise<{
+  session: SessionWithoutHash;
+  user: UserDTO;
+}> {
   const user = await getUserByEmail(email);
   if (!user) {
-    throw new Error('User does not exist');
+    throw new UnauthorizedError('Invalid credentials', 'INVALID_CREDENTIALS');
   }
   const passwordValid = await Bun.password.verify(
     password,
     user.passwordHashed,
     process.env.HASH_ALGORITHM! as Bun.Password.AlgorithmLabel,
   );
+  console.log('passwordValid', passwordValid);
   if (!passwordValid) {
-    throw new Error('Invalid credentials');
+    throw new UnauthorizedError('Invalid credentials', 'INVALID_CREDENTIALS');
   }
   const session = await createSession(user.id);
-  return session;
+
+  return { session, user };
 }
 
 export async function register(params: RegisterDto) {
   const user = await getUserByEmail(params.email);
   if (user) {
-    throw new Error('Account with this email already exist');
+    throw new ConflictError('Account with this email already exists', 'EMAIL_EXISTS');
   }
-  if (params.password !== params.confirmPassword) {
-    throw new Error('Password does not match');
-  }
+
   const passwordHashed = await Bun.password.hash(params.password, {
     algorithm: process.env.HASH_ALGORITHM! as Bun.Password.AlgorithmLabel,
   });
