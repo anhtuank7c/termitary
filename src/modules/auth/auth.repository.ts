@@ -26,9 +26,9 @@ export async function createSession(userId: string): Promise<SessionWithToken> {
 
   await db.insert(sessionTable).values({
     id: session.id,
-    user_id: session.userId,
-    secret_hash: session.secretHash,
-    // created_at: Math.floor(session.createdAt.getTime() / 1000),
+    userId: session.userId,
+    secretHash: session.secretHash,
+    createdAt: session.createdAt,
   });
   return session;
 }
