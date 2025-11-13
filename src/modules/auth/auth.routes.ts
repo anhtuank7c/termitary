@@ -4,15 +4,10 @@ import { registerSchema } from './dto/register.dto';
 import { loginSchema } from './dto/login.dto';
 
 export const authRoutes = new Elysia({ name: 'auth', prefix: '/api/v1/auth' })
-  // .onError(({ error, code }) => {
-  //   console.error('onError', code, error);
-  // })
   .post(
     '/login',
     async ({ body, set }) => {
-      console.log('start login');
       const { session, user } = await authServices.login(body);
-      console.log('end login', user, session);
       set.status = 200;
       return {
         success: true,

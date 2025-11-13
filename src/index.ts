@@ -1,3 +1,4 @@
+import z from 'zod';
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import { fromTypes, openapi } from '@elysiajs/openapi';
@@ -5,7 +6,6 @@ import { bearer } from '@elysiajs/bearer';
 import { logger } from '@chneau/elysia-logger';
 import { authRoutes } from './modules/auth/auth.routes';
 import { errorHandler } from './common/plugins/error-handler.plugin';
-import z from 'zod';
 
 const app = new Elysia()
   .use(logger())
@@ -19,7 +19,8 @@ const app = new Elysia()
   )
   .use(bearer())
   .use(cors())
-  // .use(errorHandler) // Global error handler for all routes
+  // Global error handler for all routes
+  .onError(errorHandler)
   .use(authRoutes)
   .get('/', () => 'Hello Termitary')
   .listen(Number(Bun.env.PORT) || 3000);
