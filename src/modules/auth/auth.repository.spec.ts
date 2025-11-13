@@ -28,7 +28,7 @@ describe('AuthRepository', () => {
     test('should create a new session with valid token', async () => {
       let capturedQuery: any;
 
-      const session = await createSession();
+      const session = await createSession('user-01');
 
       expect(session).toBeDefined();
       expect(session.id).toBe('mock-random-string');
@@ -44,7 +44,7 @@ describe('AuthRepository', () => {
         return `random-string-${callCount}`;
       });
 
-      const session = await createSession();
+      const session = await createSession('user-01');
 
       expect(mockGenerateSecureRandomString).toHaveBeenCalledTimes(2);
       expect(session.id).toBe('random-string-1');
@@ -54,7 +54,7 @@ describe('AuthRepository', () => {
     test('should hash the secret before storing', async () => {
       const mockHash = new Uint8Array([10, 20, 30, 40]);
       mockHashSecret.mockResolvedValue(mockHash);
-      const session = await createSession();
+      const session = await createSession('user-01');
 
       expect(mockHashSecret).toHaveBeenCalledTimes(1);
       expect(mockHashSecret).toHaveBeenCalledWith('mock-random-string');
@@ -64,7 +64,7 @@ describe('AuthRepository', () => {
     test('should insert session into database with correct parameters', async () => {
       let insertedData: any = null;
       const beforeTime = Math.floor(Date.now() / 1000);
-      await createSession();
+      await createSession('user-01');
       const afterTime = Math.floor(Date.now() / 1000);
 
       expect(insertedData).toBeDefined();
@@ -78,7 +78,7 @@ describe('AuthRepository', () => {
       mockGenerateSecureRandomString
         .mockReturnValueOnce('test-id-123')
         .mockReturnValueOnce('test-secret-456');
-      const session = await createSession();
+      const session = await createSession('user-01');
 
       expect(session.token).toBe('test-id-123.test-secret-456');
       expect(session.token).toContain('.');
@@ -88,7 +88,7 @@ describe('AuthRepository', () => {
     test('should set createdAt to current time', async () => {
       const beforeTime = Date.now();
 
-      const session = await createSession();
+      const session = await createSession('user-01');
 
       const afterTime = Date.now();
       const sessionTime = session.createdAt.getTime();
@@ -101,7 +101,7 @@ describe('AuthRepository', () => {
       let insertedTimestamp: number | null = null;
 
       const beforeTime = Math.floor(Date.now() / 1000);
-      await createSession();
+      await createSession('user-01');
       const afterTime = Math.floor(Date.now() / 1000);
 
       expect(insertedTimestamp).toBeDefined();
@@ -116,11 +116,11 @@ describe('AuthRepository', () => {
         throw new Error('Database connection error');
       });
 
-      await expect(createSession()).rejects.toThrow('Database connection error');
+      await expect(createSession('user-01')).rejects.toThrow('Database connection error');
     });
 
     test('should return SessionWithToken interface', async () => {
-      const session = await createSession();
+      const session = await createSession('user-01');
 
       // Verify all required properties exist
       expect(session).toHaveProperty('id');

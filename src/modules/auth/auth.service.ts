@@ -3,11 +3,11 @@ import { NewUser, UserDTO } from '../users/users.schema';
 import { createSession } from './auth.repository';
 import { SessionWithoutHash } from './auth.schema';
 import { generateSecureRandomString } from './auth.util';
-import { LoginDto } from './validation/login.validation';
-import { RegisterDto } from './validation/register.validation';
+import { LoginParams } from './validation/login.validation';
+import { RegisterParams } from './validation/register.validation';
 import { UnauthorizedError, ConflictError } from '../../common/errors/http-error';
 
-export async function login({ email, password }: LoginDto): Promise<{
+export async function login({ email, password }: LoginParams): Promise<{
   session: SessionWithoutHash;
   user: UserDTO;
 }> {
@@ -28,7 +28,7 @@ export async function login({ email, password }: LoginDto): Promise<{
   return { session, user };
 }
 
-export async function register(params: RegisterDto) {
+export async function register(params: RegisterParams) {
   const user = await getUserByEmail(params.email);
   if (user) {
     throw new ConflictError('Account with this email already exists', 'EMAIL_EXISTS');

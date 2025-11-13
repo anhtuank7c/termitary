@@ -1,4 +1,3 @@
-import { Elysia } from 'elysia';
 import { HttpError } from '../errors/http-error';
 
 // @ts-expect-error Need to add type annotation
