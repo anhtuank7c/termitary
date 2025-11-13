@@ -3,7 +3,6 @@ import { HttpError } from '../errors/http-error';
 
 // @ts-expect-error Need to add type annotation
 export const errorHandler = ({ error, code, set }) => {
-  console.error(`onError: ${error} - ${code}`);
   if (error instanceof HttpError) {
     set.status = error.statusCode;
     return {
@@ -18,12 +17,15 @@ export const errorHandler = ({ error, code, set }) => {
   // Handle validation errors
   if (code === 'VALIDATION') {
     set.status = 400;
+    const fieldPath = (error.valueError.path ?? '').replace('/', '');
     return {
       success: false,
       error: {
         code: 'VALIDATION_ERROR',
         message: 'Validation failed',
-        details: error,
+        details: {
+          [fieldPath]: error.valueError.message,
+        },
       },
     };
   }

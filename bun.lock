@@ -1,10 +1,10 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "termitary",
       "dependencies": {
-        "@chneau/elysia-logger": "^1.0.10",
         "@elysiajs/bearer": "^1.4.1",
         "@elysiajs/cors": "^1.4.0",
         "@elysiajs/cron": "^1.4.1",
@@ -33,8 +33,6 @@
   },
   "packages": {
     "@borewit/text-codec": ["@borewit/text-codec@0.1.1", "", {}, "sha512-5L/uBxmjaCIX5h8Z+uu+kA9BQLkc/Wl06UGR5ajNRxu+/XjonB5i8JpgFMrPj3LXTCPA0pv8yxUvbUi+QthGGA=="],
-
-    "@chneau/elysia-logger": ["@chneau/elysia-logger@1.0.10", "", { "dependencies": { "elysia": "^1.1.25" } }, "sha512-DemJhELQjz+mGGRrfHh9PLImi54sjwaORcS9PeX3fepBIb+DZudbR1exyBdEgQIqSsr2NwU9TiWwJZDCTl5iiQ=="],
 
     "@drizzle-team/brocli": ["@drizzle-team/brocli@0.10.2", "", {}, "sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w=="],
 

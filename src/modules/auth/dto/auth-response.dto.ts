@@ -4,7 +4,7 @@ import { successResponseSchema } from '../../../common/schemas/response.schema';
 // User response schema (without sensitive data)
 export const userResponseSchema = z.object({
   id: z.string(),
-  email: z.string().email(),
+  email: z.email(),
   username: z.string(),
 });
 

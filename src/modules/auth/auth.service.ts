@@ -3,8 +3,8 @@ import { NewUser, UserDTO } from '../users/users.schema';
 import { createSession } from './auth.repository';
 import { SessionWithoutHash } from './auth.schema';
 import { generateSecureRandomString } from './auth.util';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './validation/login.validation';
+import { RegisterDto } from './validation/register.validation';
 import { UnauthorizedError, ConflictError } from '../../common/errors/http-error';
 
 export async function login({ email, password }: LoginDto): Promise<{
@@ -20,7 +20,6 @@ export async function login({ email, password }: LoginDto): Promise<{
     user.passwordHashed,
     process.env.HASH_ALGORITHM! as Bun.Password.AlgorithmLabel,
   );
-  console.log('passwordValid', passwordValid);
   if (!passwordValid) {
     throw new UnauthorizedError('Invalid credentials', 'INVALID_CREDENTIALS');
   }

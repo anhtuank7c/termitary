@@ -1,7 +1,7 @@
 import Elysia from 'elysia';
 import * as authServices from './auth.service';
-import { registerSchema } from './dto/register.dto';
-import { loginSchema } from './dto/login.dto';
+import { registerSchema } from './validation/register.validation';
+import { loginSchema } from './validation/login.validation';
 
 export const authRoutes = new Elysia({ name: 'auth', prefix: '/api/v1/auth' })
   .post(

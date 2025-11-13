@@ -3,12 +3,10 @@ import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import { fromTypes, openapi } from '@elysiajs/openapi';
 import { bearer } from '@elysiajs/bearer';
-import { logger } from '@chneau/elysia-logger';
 import { authRoutes } from './modules/auth/auth.routes';
 import { errorHandler } from './common/plugins/error-handler.plugin';
 
 const app = new Elysia()
-  .use(logger())
   .use(
     openapi({
       references: fromTypes(),
@@ -17,10 +15,10 @@ const app = new Elysia()
       },
     }),
   )
-  .use(bearer())
-  .use(cors())
   // Global error handler for all routes
   .onError(errorHandler)
+  .use(bearer())
+  .use(cors())
   .use(authRoutes)
   .get('/', () => 'Hello Termitary')
   .listen(Number(Bun.env.PORT) || 3000);
